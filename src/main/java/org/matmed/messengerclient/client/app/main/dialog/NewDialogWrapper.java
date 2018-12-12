@@ -1,0 +1,39 @@
+package org.matmed.messengerclient.client.app.main.dialog;
+
+import org.matmed.messengerclient.client.network.queries.CreateDialogQuery;
+import org.matmed.messengerclient.common.objects.User;
+
+import java.io.IOException;
+import java.util.Date;
+
+public class NewDialogWrapper extends AbstractDialogWrapper {
+    private User user;
+
+    public NewDialogWrapper(User user) throws IOException {
+        super(null);
+        this.user = user;
+        bindUser();
+    }
+
+    @Override
+    public void onSend() {
+        try {
+            CreateDialogQuery.sendDialogQuery(user.getLogin(), dialogController.getMessageField().getText());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void bindUser()
+    {
+        dialogController.getTitle().setText(user.getName());
+        String text;
+        if (user.isOnline())
+            text = "В сети";
+        else
+        {
+            Date d = new Date(user.getLastOnline());
+            text = String.format("Был в сети %tc", d);
+        }
+        dialogController.getInfo().setText(text);
+    }
+}
