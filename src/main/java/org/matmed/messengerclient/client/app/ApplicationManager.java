@@ -2,7 +2,7 @@ package org.matmed.messengerclient.client.app;
 
 import org.matmed.messengerclient.client.app.initial.InitialWindowController;
 import org.matmed.messengerclient.client.app.main.MainWindowManager;
-import client.network.SocketConnection;
+import org.matmed.messengerclient.client.network.SocketConnection;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.Parent;

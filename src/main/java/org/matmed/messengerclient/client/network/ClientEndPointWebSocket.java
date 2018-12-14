@@ -1,23 +1,24 @@
 package org.matmed.messengerclient.client.network;
 
-import com.alibaba.fastjson.JSON;
 import org.matmed.messengerclient.client.network.queries.*;
 import org.matmed.messengerclient.common.Methods;
+import org.matmed.messengerclient.common.Response;
 
-import java.io.IOException;
+import javax.websocket.*;
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import org.matmed.messengerclient.common.*;
-import static com.sun.xml.internal.ws.api.message.Packet.Status.Response;
 
-public class ClientSocket{
-    private static ClientSocket instance;
-
+@ClientEndpoint
+public class ClientEndPointWebSocket {
+    Session userSession = null;
+    private MessageHandler messageHandler;
+    private final URI endpointURI = URI.create("wss://echo.websocket.org");
+    private static final int MAX_MESSAGE_SIZE = 104857600;
     private final Map<String, Consumer<Response>> handlers = new HashMap<>();
     {
-        System.out.println("jopa");
-         handlers.put(Methods.LOGIN, AuthorizationQuery::onHandle);
+        handlers.put(Methods.LOGIN, AuthorizationQuery::onHandle);
         handlers.put(Methods.GET_DIALOGS, GetDialogsQuery::onHandle);
         handlers.put(Methods.GET_DIALOG, GetDialogQuery::onHandle);
         handlers.put(Methods.SEND_MESSAGE, SendMessageQuery::onHandle);
@@ -36,30 +37,44 @@ public class ClientSocket{
         handlers.put(Methods.GET_USER, GetUserQuery::onHandle);
     }
 
-    public static ClientSocket getInstance() {
-        return instance;
-    }
-    public void send(Request r) throws IOException {
-        String s = JSON.toJSONString(r);
-        System.out.println("Sending: "+s);
-        //getSession().getRemote().sendString(s);
-        //System.out.println("JUST SENT!");
+    public ClientEndPointWebSocket() {
+
+        try {
+            WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+            container.connectToServer(ClientEndPointWebSocket.class, endpointURI);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public void onWebSocketConnect(String sess) {
-        //super.onWebSocketConnect(sess);
-        instance = this;
+    @OnOpen
+    public void onOpen(Session userSession) {
+        System.out.println("opening websocket");
+        this.userSession = userSession;
     }
 
-    public void onWebSocketText(String message) {
-        System.out.println("RECEIVED: "+message);
-        Response r = JSON.parseObject(message, Response.class);
-        Consumer<Response>  consumer = handlers.get(r.getType());
-        if (consumer != null)
-            consumer.accept(r);
+    @OnClose
+    public void onClose(Session userSession, CloseReason reason) {
+        System.out.println("closing websocket");
+        this.userSession = null;
     }
 
-    public void onWebSocketError(Throwable cause) {
-        System.out.println("ERROR: "+cause.getMessage());
+    @OnMessage
+    public void onMessage(String message) {
+        System.out.println(message);
+    }
+
+    public void addMessageHandler(MessageHandler msgHandler) {
+        this.messageHandler = msgHandler;
+    }
+
+    public void sendMessage(String message) {
+        this.userSession.getAsyncRemote().sendText(message);
+    }
+
+    public static interface MessageHandler {
+
+        public void handleMessage(String message);
     }
 }
+

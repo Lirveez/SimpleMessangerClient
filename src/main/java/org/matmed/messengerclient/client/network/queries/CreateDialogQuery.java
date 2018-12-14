@@ -1,12 +1,13 @@
 package org.matmed.messengerclient.client.network.queries;
 
-import client.network.ClientSocket;
+
+import org.matmed.messengerclient.client.network.ClientSocket;
 import org.matmed.messengerclient.client.suppliers.DialogManager;
 import com.alibaba.fastjson.JSONObject;
 import org.matmed.messengerclient.common.Methods;
 import org.matmed.messengerclient.common.Request;
 import org.matmed.messengerclient.common.Response;
-import common.objects.*;
+import org.matmed.messengerclient.common.*;
 import org.matmed.messengerclient.common.objects.requests.CreateDialogRequest;
 import org.matmed.messengerclient.common.objects.requests.CreateGroupRequest;
 import org.matmed.messengerclient.common.objects.Dialog;

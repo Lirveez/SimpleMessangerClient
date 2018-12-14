@@ -1,7 +1,8 @@
 package org.matmed.messengerclient.client.network.queries;
 
 import org.matmed.messengerclient.client.suppliers.DialogManager;
-import client.network.ClientSocket;
+
+import org.matmed.messengerclient.client.network.ClientSocket;
 import org.matmed.messengerclient.client.app.main.MainWindowManager;
 import com.alibaba.fastjson.JSON;
 import org.matmed.messengerclient.common.Methods;

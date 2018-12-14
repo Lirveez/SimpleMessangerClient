@@ -1,7 +1,8 @@
 package org.matmed.messengerclient.client.network.queries;
 
 import org.matmed.messengerclient.client.utils.Listener;
-import client.network.ClientSocket;
+
+import org.matmed.messengerclient.client.network.ClientSocket;
 import org.matmed.messengerclient.common.Methods;
 import org.matmed.messengerclient.common.Request;
 import org.matmed.messengerclient.common.Response;

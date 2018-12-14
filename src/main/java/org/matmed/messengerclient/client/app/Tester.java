@@ -1,7 +1,7 @@
 package org.matmed.messengerclient.client.app;
 
 import org.matmed.messengerclient.client.controllers.ImagePicker;
-import client.network.SocketConnection;
+import org.matmed.messengerclient.client.network.ClientSocket;
 import javafx.application.Application;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
